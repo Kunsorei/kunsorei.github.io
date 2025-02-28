@@ -3,80 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Git & SSH: Complete Guide</title>
+    <title>Git Guide</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; max-width: 800px; }
-        pre { background: #f4f4f4; padding: 10px; border-left: 4px solid #333; overflow-x: auto; }
-        code { font-family: monospace; color: #c7254e; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; }
         h1, h2, h3 { color: #333; }
+        code { background: #f4f4f4; padding: 2px 5px; border-radius: 3px; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
     </style>
 </head>
 <body>
-    <h1>Git & SSH: Complete Guide</h1>
-    <p>A detailed guide on Git commands, SSH configuration, managing multiple GitHub accounts, and troubleshooting common issues.</p>
+    <h1>Git Guide: Commands, Concepts, and Scenarios</h1>
     
-    <h2>1. Initializing a Git Repository</h2>
-    <p>To start tracking files in a project, initialize a Git repository:</p>
+    <h2>1. Initializing a Repository</h2>
+    <p>To start a new repository, use:</p>
     <pre><code>git init</code></pre>
-    <p>This creates a <code>.git</code> directory in the project folder.</p>
+    <p>This initializes a new Git repository in the current directory.</p>
 
-    <h2>2. Viewing Git Commit History</h2>
-    <p>Check commit history to find commit hashes:</p>
+    <h2>2. Checking Repository Status</h2>
+    <p>View the current status of the repository with:</p>
+    <pre><code>git status</code></pre>
+    <p>This shows modified files, untracked files, and branch information.</p>
+
+    <h2>3. Committing Changes</h2>
+    <p>To stage and commit changes:</p>
+    <pre><code>git add .
+git commit -m "Commit message"</code></pre>
+    <p>The first command stages all changes, and the second commits them.</p>
+
+    <h2>4. Connecting to a Remote Repository</h2>
+    <p>To add a remote repository:</p>
+    <pre><code>git remote add origin &lt;repository-url&gt;</code></pre>
+    <p>Verify the remote URL with:</p>
+    <pre><code>git remote -v</code></pre>
+
+    <h2>5. Pushing Changes</h2>
+    <p>Push changes to the remote repository:</p>
+    <pre><code>git push -u origin main</code></pre>
+    <p>The <code>-u</code> flag sets the upstream branch.</p>
+
+    <h2>6. Viewing Commit History</h2>
+    <p>See a log of commits with:</p>
     <pre><code>git log --oneline</code></pre>
-    
-    <h2>3. Reverting Changes</h2>
-    <p>To undo a commit, find the commit hash from <code>git log</code> and run:</p>
+    <p>This shows a condensed list of commit hashes and messages.</p>
+
+    <h2>7. Reverting a Commit</h2>
+    <p>To undo a commit:</p>
     <pre><code>git revert &lt;commit-hash&gt;</code></pre>
+    <p>This creates a new commit that undoes the specified commit.</p>
 
-    <h2>4. Understanding HEAD and Reflog</h2>
-    <p><strong>HEAD</strong> represents the latest commit. To see previous states:</p>
-    <pre><code>git reflog</code></pre>
-    <p>Example output:</p>
-    <pre><code>58bb193 (HEAD -> main) HEAD@{0}: revert: eevert "add style"
-b6becb3 (origin/main) HEAD@{1}: commit: add style</code></pre>
-    
-    <h2>5. Handling Upstream Branch Issues</h2>
-    <p>If you see an upstream branch error:</p>
-    <pre><code>git push --set-upstream origin main</code></pre>
-    <p>This links your local branch to the remote branch.</p>
+    <h2>8. Setting Up Multiple GitHub Accounts</h2>
+    <p>To manage multiple GitHub accounts, configure the SSH settings in <code>~/.ssh/config</code>:</p>
+    <pre><code>Host github-personal
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_rsa_personal
 
-    <h2>6. Managing Multiple GitHub Accounts</h2>
-    <p>If you work with multiple GitHub accounts, configure SSH keys:</p>
-    <pre><code># Personal GitHub Account
-Host github.com-alikojiro
-  HostName github.com
-  User git
-  IdentityFile ~/.ssh/id_rsa
-  IdentitiesOnly yes
+Host github-work
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_rsa_work</code></pre>
+    <p>Clone repositories using:</p>
+    <pre><code>git clone git@github-personal:username/repo.git</code></pre>
 
-# Work GitHub Account
-Host github.com-kunsorei
-  HostName github.com
-  User git
-  IdentityFile ~/.ssh/id_ed25519_git
-  IdentitiesOnly yes</code></pre>
-    
-    <h2>7. Switching Between Accounts</h2>
-    <p>Update your remote URL to match the SSH config:</p>
-    <pre><code>git remote set-url origin git@github.com-kunsorei:Kunsorei/repo.git</code></pre>
-    <p>Verify authentication:</p>
-    <pre><code>ssh -T git@github.com-kunsorei</code></pre>
+    <h2>9. Resolving Authentication Issues</h2>
+    <p>If authentication fails, check SSH keys with:</p>
+    <pre><code>ssh -T git@github.com</code></pre>
+    <p>Ensure the correct SSH key is being used.</p>
 
-    <h2>8. Pushing Changes After Initializing Git</h2>
-    <p>After running <code>git init</code>, add a remote repo and push changes:</p>
-    <pre><code>git remote add origin git@github.com-alikojiro:username/repo.git
-git push -u origin main</code></pre>
-    
-    <h2>9. Troubleshooting Permission Errors</h2>
-    <p>If you see an error like:</p>
-    <pre><code>ERROR: Permission to Kunsorei/repo.git denied</code></pre>
-    <p>Ensure you are using the correct SSH key:</p>
-    <pre><code>ssh -T git@github.com-kunsorei</code></pre>
-    <p>For one-time use of a specific SSH key:</p>
-    <pre><code>GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519_git" git push origin main</code></pre>
-    <p>To set it permanently for this repository:</p>
-    <pre><code>git config core.sshCommand "ssh -i ~/.ssh/id_ed25519_git"</code></pre>
-
-    <p>With this guide, you can confidently manage Git repositories and multiple GitHub accounts using SSH.</p>
+    <h2>Conclusion</h2>
+    <p>This guide covers essential Git commands and scenarios. With these, you can confidently manage repositories, resolve issues, and work efficiently with Git.</p>
 </body>
 </html>
