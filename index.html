@@ -1,9 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Learn Git | study notes</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git & SSH: Complete Guide</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; max-width: 800px; }
+        pre { background: #f4f4f4; padding: 10px; border-left: 4px solid #333; overflow-x: auto; }
+        code { font-family: monospace; color: #c7254e; }
+        h1, h2, h3 { color: #333; }
+    </style>
 </head>
 <body>
-    Learning Git stuff!
+    <h1>Git & SSH: Complete Guide</h1>
+    <p>A detailed guide on Git commands, SSH configuration, managing multiple GitHub accounts, and troubleshooting common issues.</p>
+    
+    <h2>1. Initializing a Git Repository</h2>
+    <p>To start tracking files in a project, initialize a Git repository:</p>
+    <pre><code>git init</code></pre>
+    <p>This creates a <code>.git</code> directory in the project folder.</p>
+
+    <h2>2. Viewing Git Commit History</h2>
+    <p>Check commit history to find commit hashes:</p>
+    <pre><code>git log --oneline</code></pre>
+    
+    <h2>3. Reverting Changes</h2>
+    <p>To undo a commit, find the commit hash from <code>git log</code> and run:</p>
+    <pre><code>git revert &lt;commit-hash&gt;</code></pre>
+
+    <h2>4. Understanding HEAD and Reflog</h2>
+    <p><strong>HEAD</strong> represents the latest commit. To see previous states:</p>
+    <pre><code>git reflog</code></pre>
+    <p>Example output:</p>
+    <pre><code>58bb193 (HEAD -> main) HEAD@{0}: revert: eevert "add style"
+b6becb3 (origin/main) HEAD@{1}: commit: add style</code></pre>
+    
+    <h2>5. Handling Upstream Branch Issues</h2>
+    <p>If you see an upstream branch error:</p>
+    <pre><code>git push --set-upstream origin main</code></pre>
+    <p>This links your local branch to the remote branch.</p>
+
+    <h2>6. Managing Multiple GitHub Accounts</h2>
+    <p>If you work with multiple GitHub accounts, configure SSH keys:</p>
+    <pre><code># Personal GitHub Account
+Host github.com-alikojiro
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_rsa
+  IdentitiesOnly yes
+
+# Work GitHub Account
+Host github.com-kunsorei
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519_git
+  IdentitiesOnly yes</code></pre>
+    
+    <h2>7. Switching Between Accounts</h2>
+    <p>Update your remote URL to match the SSH config:</p>
+    <pre><code>git remote set-url origin git@github.com-kunsorei:Kunsorei/repo.git</code></pre>
+    <p>Verify authentication:</p>
+    <pre><code>ssh -T git@github.com-kunsorei</code></pre>
+
+    <h2>8. Pushing Changes After Initializing Git</h2>
+    <p>After running <code>git init</code>, add a remote repo and push changes:</p>
+    <pre><code>git remote add origin git@github.com-alikojiro:username/repo.git
+git push -u origin main</code></pre>
+    
+    <h2>9. Troubleshooting Permission Errors</h2>
+    <p>If you see an error like:</p>
+    <pre><code>ERROR: Permission to Kunsorei/repo.git denied</code></pre>
+    <p>Ensure you are using the correct SSH key:</p>
+    <pre><code>ssh -T git@github.com-kunsorei</code></pre>
+    <p>For one-time use of a specific SSH key:</p>
+    <pre><code>GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519_git" git push origin main</code></pre>
+    <p>To set it permanently for this repository:</p>
+    <pre><code>git config core.sshCommand "ssh -i ~/.ssh/id_ed25519_git"</code></pre>
+
+    <p>With this guide, you can confidently manage Git repositories and multiple GitHub accounts using SSH.</p>
 </body>
 </html>
